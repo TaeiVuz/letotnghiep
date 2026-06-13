@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thư Mời Lễ Tốt Nghiệp - Nguyễn Thị Xuân Phúc</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for celebration effect -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Firebase SDKs for real-time guestbook and RSVP -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        .font-serif-elegant {
+            font-family: 'Playfair Display', serif;
+        }
+        .font-cursive {
+            font-family: 'Great Vibes', cursive;
+        }
+        .font-handwritten {
+            font-family: 'Dancing Script', cursive;
+        }
+        .font-sans-modern {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        /* Gold gradient styling */
+        .text-gold {
+            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-gold-gradient {
+            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 30%, #B38728 70%, #AA771C 100%);
+        }
+        
+        /* Envelope visual transitions */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+        .envelope {
+            position: relative;
+            transition: transform 1s ease-in-out;
+            transform-style: preserve-3d;
+        }
+        .envelope.open {
+            transform: translateY(150%) scale(0.9);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Webkit scrollbar for dynamic feedback area */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e3a8a;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans-modern min-h-screen flex items-center justify-center overflow-x-hidden antialiased relative">
+
+    <!-- Background music files -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="open-sound">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav" type="audio/wav">
+    </audio>
+
+    <!-- Music controller -->
+    <button id="music-toggle" class="fixed bottom-6 right-6 z-50 bg-white/95 text-blue-900 border border-blue-200 p-3.5 rounded-full shadow-2xl hover:bg-blue-100 transition-all duration-300 hidden flex items-center justify-center">
+        <i id="music-icon" class="fas fa-music text-lg"></i>
+    </button>
+
+    <!-- 1. ENVELOPE COVER (MÀN HÌNH BÌA THƯ BAN ĐẦU) -->
+    <div id="envelope-screen" class="fixed inset-0 z-40 bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 flex flex-col items-center justify-center p-4 transition-all duration-1000 backdrop-blur-md">
+        <div class="text-center mb-8 animate-fade-in px-4">
+            <h3 class="text-amber-400 font-cursive text-3xl md:text-4xl mb-2">Lời mời trang trọng</h3>
+            <h1 class="text-white font-serif-elegant text-2xl md:text-3xl font-bold tracking-wider uppercase">Lễ Tốt Nghiệp</h1>
+            <p class="text-slate-300 text-sm mt-2 font-light">Nguyễn Thị Xuân Phúc</p>
+        </div>
+        
+        <div class="envelope-wrapper w-full max-w-md aspect-[4/3] bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-amber-500/20 flex flex-col justify-between p-8 relative overflow-hidden">
+            <!-- Decorative borders -->
+            <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-amber-500/30 rounded-tl-3xl"></div>
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-amber-500/30 rounded-tr-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-amber-500/30 rounded-bl-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-amber-500/30 rounded-br-3xl"></div>
+
+            <div class="text-center mt-6">
+                <i class="fa-solid fa-graduation-cap text-blue-900 text-5xl mb-4"></i>
+                <h2 class="text-blue-950 font-serif-elegant text-2xl font-semibold mt-1 tracking-wide">Trân trọng gửi đến bạn bè</h2>
+            </div>
+
+            <!-- Interactive wax seal button with pulsing effect -->
+            <div class="flex flex-col items-center justify-center mb-6 relative">
+                <button id="open-envelope-btn" class="relative group z-10 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold py-4 px-8 rounded-full shadow-[0_10px_25px_rgba(180,83,9,0.3)] hover:shadow-[0_15px_30px_rgba(180,83,9,0.5)] transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3">
+                    <span class="text-base tracking-wider uppercase font-bold">Mở Thư Mời</span>
+                    <i class="fa-solid fa-envelope-open text-xl animate-bounce"></i>
+                </button>
+                <div class="absolute -inset-1 bg-amber-400 rounded-full blur opacity-30 animate-ping pointer-events-none"></div>
+            </div>
+            
+            <div class="text-center text-[11px] text-slate-400 italic">
+                Nhấn nút tròn để mở cánh thư tốt nghiệp
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 2. MAIN INVITATION CARD (MÀN HÌNH CHÍNH NỀN TRẮNG CHỮ XANH) -->
+    <main id="main-content" class="w-full max-w-2xl bg-white my-8 mx-4 rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative opacity-0 transform translate-y-8 transition-all duration-1000 hidden">
+        
+        <!-- Top color bar indicator -->
+        <div class="h-3.5 bg-gradient-to-r from-blue-950 via-blue-800 to-amber-500"></div>
+
+        <div class="p-6 md:p-12 relative">
+            <!-- Decorative interior vintage frames -->
+            <div class="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-blue-900"></div>
+            <div class="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-blue-900"></div>
+            <div class="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-blue-900"></div>
+            <div class="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-blue-900"></div>
+
+            <div class="text-center relative z-10">
+                <!-- Theme tag -->
+                <span class="text-xs font-bold tracking-[0.25em] text-blue-900 uppercase bg-blue-50 px-4 py-1.5 rounded-full inline-block mb-4">
+                    Thư Mời Điện Tử
+                </span>
+
+                <h2 class="font-cursive text-blue-900 text-5xl md:text-6xl mb-1 drop-shadow-sm">Graduation</h2>
+                <h1 class="font-serif-elegant text-blue-950 text-3xl md:text-4xl font-extrabold tracking-wider uppercase mb-8">
+                    LỄ TỐT NGHIỆP
+                </h1>
+
+                <!-- PORTRAIT CONTAINER (THE PHOTO OF XUAN PHUC) -->
+                <div class="relative w-64 h-64 md:w-72 md:h-72 mx-auto my-6 group">
+                    <!-- Triple artistic golden borders -->
+                    <div class="absolute inset-0 rounded-full border-4 border-blue-900 rotate-3 transform group-hover:rotate-6 transition-transform duration-500"></div>
+                    <div class="absolute inset-1.5 rounded-full border-2 border-amber-500 -rotate-3 transform group-hover:-rotate-12 transition-transform duration-500"></div>
+                    <div class="absolute -inset-2 rounded-full bg-gradient-to-tr from-amber-500/20 via-transparent to-blue-900/20 opacity-70 blur-md"></div>
+                    
+                    <!-- Rounded Image Layer -->
+                    <div class="absolute inset-3 rounded-full overflow-hidden border-4 border-white shadow-lg bg-slate-100">
+                        <img 
+                            src="z7931721400008_25bf04040cea012e0902ff169b64ec1c.jpg" 
+                            alt="Nguyễn Thị Xuân Phúc" 
+                            class="w-full h-full object-cover object-center transform scale-100 group-hover:scale-105 transition-transform duration-700"
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop';"
+                        />
+                    </div>
+                    
+                    <!-- Cap icon on the corner -->
+                    <div class="absolute -bottom-2 right-4 bg-gradient-to-r from-blue-950 to-blue-900 text-amber-400 p-3 rounded-full shadow-lg border border-amber-400 transform hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                </div>
+
+                <!-- Star patterns divider -->
+                <div class="flex justify-center items-center gap-2 mb-6">
+                    <span class="h-[1px] w-12 bg-gradient-to-r from-transparent to-blue-900"></span>
+                    <i class="fa-solid fa-star text-amber-500 text-xs"></i>
+                    <i class="fa-solid fa-star text-amber-500 text-sm"></i>
+                    <i class="fa-solid fa-star text-amber-500 text-xs"></i>
+                    <span class="h-[1px] w-12 bg-gradient-to-l from-transparent to-blue-900"></span>
+                </div>
+
+                <!-- Warm citation -->
+                <p class="text-blue-900 text-sm md:text-base italic leading-relaxed max-w-md mx-auto mb-8 font-serif-elegant">
+                    "Hành trình vạn dặm bắt đầu từ một bước chân. Sự hiện diện của bạn bè thân thương chính là niềm vinh dự và kỷ niệm đẹp đẽ nhất đối với mình."
+                </p>
+
+                <!-- Guest information details -->
+                <div class="mb-10">
+                    <p class="text-[11px] uppercase tracking-[0.25em] text-slate-500 mb-1">Trân trọng kính mời đến tham dự buổi lễ của</p>
+                    <h2 class="text-blue-950 font-serif-elegant text-3xl md:text-4xl font-black tracking-wide uppercase mb-2">
+                        Nguyễn Thị Xuân Phúc
+                    </h2>
+                    <p class="text-amber-600 text-xs md:text-sm tracking-widest font-semibold uppercase">Trường Đại Học Duy Tân Đà Nẵng</p>
+                </div>
+
+                <!-- TIME & LOCATION CARDS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8 border-t border-b border-slate-100 py-8">
+                    <!-- Date & Time Card -->
+                    <div class="flex flex-col items-center justify-center p-5 rounded-2xl bg-blue-50/50 border border-blue-100/50">
+                        <div class="bg-blue-900 text-white w-12 h-12 rounded-full flex items-center justify-center mb-3 shadow-md">
+                            <i class="fa-solid fa-calendar-days text-lg"></i>
+                        </div>
+                        <h4 class="text-blue-950 font-bold text-base mb-1 uppercase tracking-wider">Thời Gian</h4>
+                        <p class="text-blue-900 font-bold text-2xl">15:00</p>
+                        <p class="text-slate-600 text-sm mt-1">Thứ Sáu, Ngày 19/06/2026</p>
+                    </div>
+
+                    <!-- Location Card -->
+                    <div class="flex flex-col items-center justify-center p-5 rounded-2xl bg-amber-50/40 border border-amber-100/40">
+                        <div class="bg-amber-500 text-white w-12 h-12 rounded-full flex items-center justify-center mb-3 shadow-md">
+                            <i class="fa-solid fa-location-dot text-lg"></i>
+                        </div>
+                        <h4 class="text-blue-950 font-bold text-base mb-1 uppercase tracking-wider">Địa Điểm</h4>
+                        <p class="text-blue-900 font-bold text-lg text-center">Đại Học Duy Tân</p>
+                        <p class="text-slate-600 text-xs text-center mt-1">03 Quang Trung, Hải Châu, Đà Nẵng</p>
+                    </div>
+                </div>
+
+                <!-- COUNTDOWN CLOCK -->
+                <div class="my-10">
+                    <h4 class="text-xs tracking-[0.25em] text-slate-500 uppercase mb-4 font-bold">Cùng đếm ngược thời gian</h4>
+                    <div class="grid grid-cols-4 gap-2 max-w-sm mx-auto">
+                        <div class="bg-blue-950/5 p-3 rounded-xl border border-blue-900/10 text-center">
+                            <span id="days" class="block font-bold text-2xl md:text-3xl text-blue-950">00</span>
+                            <span class="text-[10px] uppercase text-slate-500 font-semibold">Ngày</span>
+                        </div>
+                        <div class="bg-blue-950/5 p-3 rounded-xl border border-blue-900/10 text-center">
+                            <span id="hours" class="block font-bold text-2xl md:text-3xl text-blue-950">00</span>
+                            <span class="text-[10px] uppercase text-slate-500 font-semibold">Giờ</span>
+                        </div>
+                        <div class="bg-blue-950/5 p-3 rounded-xl border border-blue-900/10 text-center">
+                            <span id="minutes" class="block font-bold text-2xl md:text-3xl text-blue-950">00</span>
+                            <span class="text-[10px] uppercase text-slate-500 font-semibold">Phút</span>
+                        </div>
+                        <div class="bg-blue-950/5 p-3 rounded-xl border border-blue-900/10 text-center">
+                            <span id="seconds" class="block font-bold text-2xl md:text-3xl text-blue-950">00</span>
+                            <span class="text-[10px] uppercase text-slate-500 font-semibold">Giây</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UTILITY ACTIONS -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center my-8">
+                    <button id="btn-save-calendar" class="w-full sm:w-auto px-6 py-3.5 bg-blue-950 hover:bg-blue-900 text-white font-semibold text-sm rounded-xl shadow-md transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-calendar-plus text-base"></i>
+                        <span>Thêm vào Lịch điện thoại</span>
+                    </button>
+                    <a href="https://maps.google.com/?q=03+Quang+Trung+Da+Nang+Duy+Tan+University" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm rounded-xl shadow-md transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-map-location-dot text-base"></i>
+                        <span>Xem Bản Đồ Đường Đi</span>
+                    </a>
+                </div>
+
+                <hr class="border-slate-100 my-10" />
+
+                <!-- 3. REAL-TIME RSVP SECTION -->
+                <div class="bg-slate-50/80 p-6 md:p-8 rounded-2xl border border-slate-100 text-left my-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-blue-100 p-2.5 rounded-lg text-blue-900">
+                            <i class="fa-solid fa-user-check text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-serif-elegant font-bold text-xl text-blue-950">Xác Nhận Tham Dự</h3>
+                            <p class="text-slate-500 text-xs">Phản hồi sớm giúp Xuân Phúc đón tiếp bạn trọn vẹn nhất!</p>
+                        </div>
+                    </div>
+                    
+                    <form id="rsvp-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Tên của Bạn *</label>
+                                <input type="text" id="rsvp-name" required class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" placeholder="Họ và tên...">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Số điện thoại</label>
+                                <input type="tel" id="rsvp-phone" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" placeholder="Để tiện liên lạc...">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Bạn sẽ tham dự chứ? *</label>
+                                <select id="rsvp-attendance" required class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900">
+                                    <option value="yes">Chắc chắn tham dự</option>
+                                    <option value="maybe">Có thể tham dự</option>
+                                    <option value="no">Tiếc quá, bận mất rồi</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Số người đi cùng</label>
+                                <select id="rsvp-guests" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900">
+                                    <option value="1">Đi một mình</option>
+                                    <option value="2">Đi cùng 1 người</option>
+                                    <option value="3">Đi cùng tập thể bạn</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-950 to-blue-900 hover:from-blue-900 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg transition-all duration-300">
+                            Gửi Phản Hồi
+                        </button>
+                    </form>
+                    <div id="rsvp-status-msg" class="mt-3 text-center text-xs font-semibold hidden"></div>
+                </div>
+
+                <!-- 4. REAL-TIME PUBLIC GUESTBOOK -->
+                <div class="p-6 md:p-8 border border-blue-100 rounded-2xl bg-white shadow-sm text-left my-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-amber-100 p-2.5 rounded-lg text-amber-600">
+                                <i class="fa-solid fa-pen-nib text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-serif-elegant font-bold text-xl text-blue-950">Lời Chúc Tốt Đẹp</h3>
+                                <p class="text-slate-500 text-xs">Gửi lời thương yêu tới bạn Xuân Phúc</p>
+                            </div>
+                        </div>
+                        <span id="guestbook-count" class="bg-blue-100 text-blue-900 text-xs font-bold px-2.5 py-1 rounded-full">0 lời chúc</span>
+                    </div>
+
+                    <!-- Feed Area -->
+                    <div id="guestbook-messages" class="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar mb-6">
+                        <div class="text-center text-slate-400 py-8 text-xs italic">Đang tải những lời chúc thương mến...</div>
+                    </div>
+
+                    <!-- Input Feed Form -->
+                    <form id="guestbook-form" class="space-y-3">
+                        <div class="flex gap-2">
+                            <input type="text" id="gb-name" required class="w-1/3 px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" placeholder="Tên bạn...">
+                            <input type="text" id="gb-wish" required class="w-2/3 px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" placeholder="Lời chúc ý nghĩa...">
+                            <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white px-4 rounded-lg flex items-center justify-center transition-colors">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Card footer details -->
+                <div class="mt-12 text-center text-slate-400 text-xs">
+                    <p class="font-semibold text-blue-950 font-serif-elegant">Rất hân hạnh được đón tiếp bạn bè!</p>
+                    <p class="mt-4">Thiệp mời chúc mừng lưu bút thông minh 2026</p>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Bottom elegant bar indicator -->
+        <div class="h-3.5 bg-gradient-to-r from-amber-500 via-blue-800 to-blue-950"></div>
+    </main>
+
+    <!-- CUSTOMIZED DIALOG BOXES (REPLACING NATIVE ALERTS) -->
+    <div id="custom-modal" class="fixed inset-0 z-50 bg-slate-950/75 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-100 transform scale-95 transition-all duration-300">
+            <div id="modal-icon-container" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-green-50 text-green-500 text-2xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3 id="modal-title" class="font-serif-elegant font-bold text-xl text-blue-950 mb-2">Thành công!</h3>
+            <p id="modal-desc" class="text-slate-600 text-sm mb-6">Mọi thứ đã được cập nhật.</p>
+            <button id="modal-close-btn" class="w-full py-3 bg-blue-950 hover:bg-blue-900 text-white font-medium rounded-xl text-sm transition-colors">
+                Xong
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // GLOBAL CONSTANTS
+        const graduationDate = new Date("2026-06-19T15:00:00+07:00").getTime();
+        const appId = 'graduation-invitation-xuanphuc';
+        
+        // --- CHỖ DÁN MÃ FIREBASE CONFIG CỦA BẠN ---
+        // Bạn hãy thay thế dòng dưới bằng khối cấu hình copy từ Firebase Console của bạn để kích hoạt hệ thống real-time.
+        const MY_FIREBASE_CONFIG = null; 
+
+        // Dynamic Alert dialog helper
+        function showCustomAlert(title, message, isError = false) {
+            const modal = document.getElementById('custom-modal');
+            const iconContainer = document.getElementById('modal-icon-container');
+            const titleEl = document.getElementById('modal-title');
+            const descEl = document.getElementById('modal-desc');
+
+            titleEl.textContent = title;
+            descEl.textContent = message;
+
+            if (isError) {
+                iconContainer.className = "w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-50 text-red-500 text-2xl";
+                iconContainer.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
+            } else {
+                iconContainer.className = "w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-green-50 text-green-500 text-2xl";
+                iconContainer.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            }
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+        }
+
+        document.getElementById('modal-close-btn').addEventListener('click', () => {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.add('scale-95');
+            modal.querySelector('div').classList.remove('scale-100');
+        });
+
+        // COUNTDOWN TIMER
+        const countdownTimer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = graduationDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = String(Math.max(0, days)).padStart(2, '0');
+            document.getElementById("hours").innerText = String(Math.max(0, hours)).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(Math.max(0, minutes)).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(Math.max(0, seconds)).padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(countdownTimer);
+            }
+        }, 1000);
+
+        // ENVELOPE INTERACTION & FIREWORKS CELEBRATION
+        document.getElementById('open-envelope-btn').addEventListener('click', function() {
+            const openSound = document.getElementById('open-sound');
+            openSound.play().catch(() => {});
+
+            // Stunning initial fireworks display
+            const duration = 2 * 1000;
+            const end = Date.now() + duration;
+            const colors = ['#BF953F', '#B38728', '#1e3a8a', '#3b82f6'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 60,
+                    origin: { x: 0, y: 0.8 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 60,
+                    origin: { x: 1, y: 0.8 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // Hide envelope panel and display main invitation
+            const envelopeScreen = document.getElementById('envelope-screen');
+            envelopeScreen.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                envelopeScreen.style.display = 'none';
+            }, 1000);
+
+            const mainContent = document.getElementById('main-content');
+            mainContent.classList.remove('hidden');
+            setTimeout(() => {
+                mainContent.classList.remove('opacity-0', 'translate-y-8');
+                mainContent.classList.add('opacity-100', 'translate-y-0');
+            }, 50);
+
+            // Auto-trigger background music
+            const bgMusic = document.getElementById('bg-music');
+            bgMusic.play().then(() => {
+                const toggleBtn = document.getElementById('music-toggle');
+                toggleBtn.classList.remove('hidden');
+                isPlaying = true;
+                musicIcon.classList.add('fa-spin', 'text-amber-500');
+            }).catch(() => {
+                document.getElementById('music-toggle').classList.remove('hidden');
+            });
+        });
+
+        // AUDIO TOGGLE HANDLER
+        const musicBtn = document.getElementById('music-toggle');
+        const musicIcon = document.getElementById('music-icon');
+        const bgMusic = document.getElementById('bg-music');
+        let isPlaying = false;
+
+        musicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicIcon.classList.remove('fa-spin', 'text-amber-500');
+                musicIcon.classList.add('text-blue-900');
+                isPlaying = false;
+            } else {
+                bgMusic.play().then(() => {
+                    musicIcon.classList.add('fa-spin', 'text-amber-500');
+                    isPlaying = true;
+                }).catch(() => {
+                    showCustomAlert("Chú ý", "Vui lòng tương tác hoặc click nút một lần nữa để khởi động nhạc", true);
+                });
+            }
+        });
+
+        // DIGITAL CALENDAR AUTOMATION
+        document.getElementById('btn-save-calendar').addEventListener('click', function() {
+            const title = encodeURIComponent("Lễ Tốt Nghiệp Nguyễn Thị Xuân Phúc");
+            const details = encodeURIComponent("Rất hân hạnh được đón tiếp quý bạn bè tới tham dự lễ tốt nghiệp ấm áp của mình tại Đại học Duy Tân.");
+            const location = encodeURIComponent("Đại Học Duy Tân, 03 Quang Trung, Hải Châu, Đà Nẵng");
+            const startDate = "20260619T150000";
+            const endDate = "20260619T180000";
+
+            const googleCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
+            window.open(googleCalUrl, '_blank');
+        });
+
+
+        // DATABASE INTEGRATION & OFFLINE PRESETS
+        let db = null;
+        let isFirebaseActive = false;
+
+        const initializeFirebaseApp = async () => {
+            if (MY_FIREBASE_CONFIG) {
+                try {
+                    const app = firebase.initializeApp(MY_FIREBASE_CONFIG);
+                    const auth = firebase.auth(app);
+                    db = firebase.firestore(app);
+
+                    await auth.signInAnonymously();
+                    isFirebaseActive = true;
+                } catch (error) {
+                    console.error("Firebase startup issues: ", error);
+                }
+            }
+        };
+
+        // Cache parameters
+        let fallbackWishes = [
+            { id: 1, name: "Thầy Hùng", wish: "Chúc mừng Xuân Phúc xuất sắc tốt nghiệp. Đường tương lai rộng lớn rạng rỡ chúc em vững bước nhé!", date: Date.now() - 3600000 * 3 },
+            { id: 2, name: "Lan Vy", wish: "Tự hào về Phúc quá bạn yêu ơi! Ngày 19/6 mình nhất định ghé tặng hoa chúc mừng nha 🌸", date: Date.now() - 3600000 }
+        ];
+
+        let fallbackRSVPs = [];
+
+        // RENDER CHANNELS
+        function renderGuestbook(messages) {
+            const listContainer = document.getElementById('guestbook-messages');
+            const countEl = document.getElementById('guestbook-count');
+            
+            if (messages.length === 0) {
+                listContainer.innerHTML = `<div class="text-center text-slate-400 py-8 text-xs italic">Chưa có lời chúc nào ở đây cả. Hãy viết lời chúc đầu tiên nhé!</div>`;
+                countEl.textContent = `0 lời chúc`;
+                return;
+            }
+
+            countEl.textContent = `${messages.length} lời chúc`;
+            listContainer.innerHTML = '';
+
+            const sorted = [...messages].sort((a,b) => b.date - a.date);
+
+            sorted.forEach(item => {
+                const dateObj = new Date(item.date);
+                const timeStr = `${dateObj.getHours()}:${String(dateObj.getMinutes()).padStart(2, '0')} - ${dateObj.getDate()}/${dateObj.getMonth() + 1}`;
+                
+                const card = document.createElement('div');
+                card.className = "p-3 bg-blue-50/50 rounded-xl border border-blue-100/50 flex flex-col gap-1 hover:bg-blue-50 transition-colors";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-sm text-blue-950">${escapeHTML(item.name)}</span>
+                        <span class="text-[10px] text-slate-400">${timeStr}</span>
+                    </div>
+                    <p class="text-xs text-slate-700 leading-relaxed italic">"${escapeHTML(item.wish)}"</p>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        function setupGuestbookListener() {
+            if (isFirebaseActive && db) {
+                const gbRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('guestbook');
+                
+                gbRef.onSnapshot(snapshot => {
+                    const wishes = [];
+                    snapshot.forEach(doc => {
+                        wishes.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderGuestbook(wishes);
+                }, error => {
+                    console.error("Firestore loading error:", error);
+                    renderGuestbook(fallbackWishes);
+                });
+            } else {
+                renderGuestbook(fallbackWishes);
+            }
+        }
+
+        // ADD WISH GUESTBOOK EVENT
+        document.getElementById('guestbook-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('gb-name');
+            const wishInput = document.getElementById('gb-wish');
+
+            const name = nameInput.value.trim();
+            const wish = wishInput.value.trim();
+
+            if (!name || !wish) return;
+
+            const newEntry = {
+                name: name,
+                wish: wish,
+                date: Date.now()
+            };
+
+            if (isFirebaseActive && db) {
+                try {
+                    const gbRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('guestbook');
+                    await gbRef.add(newEntry);
+                    showCustomAlert("Đã gửi chúc mừng!", "Cảm ơn những lời chúc đáng quý của bạn!");
+                } catch (error) {
+                    showCustomAlert("Gửi tạm thời", "Không kết nối được server đám mây. Đã lưu hiển thị tạm thời trên thiết bị.", true);
+                    fallbackWishes.push(newEntry);
+                    renderGuestbook(fallbackWishes);
+                }
+            } else {
+                fallbackWishes.push(newEntry);
+                renderGuestbook(fallbackWishes);
+                showCustomAlert("Hoàn thành!", "Đã lưu lời chúc (Chế độ demo offline)");
+            }
+
+            wishInput.value = '';
+        });
+
+        // SEND RSVP PROCESS
+        document.getElementById('rsvp-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('rsvp-name').value.trim();
+            const phone = document.getElementById('rsvp-phone').value.trim();
+            const attendance = document.getElementById('rsvp-attendance').value;
+            const guests = document.getElementById('rsvp-guests').value;
+
+            const rsvpData = {
+                name,
+                phone,
+                attendance,
+                guests,
+                timestamp: Date.now()
+            };
+
+            const statusMsg = document.getElementById('rsvp-status-msg');
+
+            if (isFirebaseActive && db) {
+                try {
+                    const rsvpRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('rsvps');
+                    await rsvpRef.add(rsvpData);
+                    
+                    statusMsg.textContent = "✓ Gửi thông tin thành công!";
+                    statusMsg.className = "mt-3 text-center text-xs font-semibold text-green-600 block";
+                    
+                    showCustomAlert(
+                        "Cảm ơn bạn!", 
+                        `Lựa chọn tham dự của bạn đã được cập nhật thành công gửi tới Xuân Phúc.`
+                    );
+                } catch (error) {
+                    showCustomAlert("Có lỗi xảy ra", "Mạng không ổn định, vui lòng thử lại.", true);
+                }
+            } else {
+                fallbackRSVPs.push(rsvpData);
+                statusMsg.textContent = "✓ Lưu thành công (Chế độ demo)!";
+                statusMsg.className = "mt-3 text-center text-xs font-semibold text-amber-600 block";
+                showCustomAlert("Cảm ơn bạn!", "Thông tin tham dự đã được lưu lại cục bộ.");
+            }
+        });
+
+        // LAUNCH INITIALIZER
+        window.onload = async function() {
+            await initializeFirebaseApp();
+            setupGuestbookListener();
+        };
+    </script>
+</body>
+</html>
